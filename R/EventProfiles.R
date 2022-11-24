@@ -4,9 +4,8 @@
 #' @param processed_data The list output by lm_preprocess
 #' @param freeze_time_duration A positive integer indicating the minimum number of time intervals that should be spanned for a freeze event to be said to have occured
 #' @param flight_time_duration A positive integer indicating the minimum number of time intervals that should be spanned for a flight event to be said to have occured
-#'
-#' @return EventProfiles, a data frame of dimension m*4; the first column is the start time of the event; second column the end time
 #' @export
+#' @return EventProfiles, a data frame of dimension m*4; the first column is the start time of the event; second column the end time
 EventProfiles <- function(processed_data, freeze_time_duration, flight_time_duration) {
   processed_data_matrix <- processed_data$processed_data
   ave_velocity <- my_iterator(processed_data$avelocity)
