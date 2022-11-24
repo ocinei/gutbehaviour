@@ -4,6 +4,7 @@
 #' @param time a vector containing the times at which stimulus was given in the experiment; default is 0.
 #'
 #' @return a list of relevant plots
+#' @export
 various_lm_plots <- function(Eventprofiles, time = 0) {
   # raster plot
   time <- time <- as.POSIXct(time,"Asia/Taipei", format="%H:%M:%OS")
