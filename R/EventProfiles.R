@@ -13,8 +13,8 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
   ave_velocity2 <- my_iterator(processed_data$avelocity)
   Match_freeze <- apply(processed_data_matrix, 1, function(x) .check_freeze(x, ave_velocity))
   Match_flight <- apply(processed_data_matrix, 1, function(x) .check_flight(x, ave_velocity2))
-  FreezeProfile <- .FreezeProfile(Match_freeze, freeze_time_duration)
-  FlightProfile <- .FlightProfile(Match_flight, flight_time_duration)
+  FreezeProfile <- .FreezeProfile(Match_freeze, freeze_time_duration, processed_data)
+  FlightProfile <- .FlightProfile(Match_flight, flight_time_duration, processed_data)
 
   # rbind the list
   FreezeProfile <- as.data.frame(do.call(rbind, FreezeProfile))
@@ -28,7 +28,7 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
   return(EventProfiles)
 }
 #' Helper function for identifying freezing condition
-.FreezeProfile <- function(Match_freeze, freeze_time_duration) {
+.FreezeProfile <- function(Match_freeze, freeze_time_duration, processed_data) {
   FreezeEventProfiles <- list()
 
   for(i in seq_len(dim(Match_freeze)[2])) {
@@ -61,7 +61,7 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
   return(FreezeEventProfiles)
 }
 #' Helper function for identifying flight condition
-.FlightProfile <- function(Match_flight, flight_time_duration) {
+.FlightProfile <- function(Match_flight, flight_time_duration, processed_data) {
   FlightEventProfiles <- list()
 
   for(i in seq_len(dim(Match_flight)[2])) {

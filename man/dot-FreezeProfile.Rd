@@ -4,7 +4,7 @@
 \alias{.FreezeProfile}
 \title{Helper function for identifying freezing condition}
 \usage{
-.FreezeProfile(Match_freeze, freeze_time_duration)
+.FreezeProfile(Match_freeze, freeze_time_duration, processed_data)
 }
 \description{
 Helper function for identifying freezing condition

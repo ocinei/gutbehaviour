@@ -4,7 +4,7 @@
 \alias{.FlightProfile}
 \title{Helper function for identifying flight condition}
 \usage{
-.FlightProfile(Match_flight, flight_time_duration)
+.FlightProfile(Match_flight, flight_time_duration, processed_data)
 }
 \description{
 Helper function for identifying flight condition
