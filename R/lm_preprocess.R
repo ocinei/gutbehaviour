@@ -8,7 +8,7 @@
 #'
 lm_preprocess <- function(data,average_velocity) {
 
-  ave_velocity <- iterators::iter(average_velocity)
+  ave_velocity <- as.numeric(average_velocity)
   time <- data[,1] # time variables
   data <- data[,-1] # subjects data
   total_subj_number <- dim(data)[2]

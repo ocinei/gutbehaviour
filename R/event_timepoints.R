@@ -17,8 +17,8 @@
 
   } else {
 
-    comparend <- array[Pointer-1] #initialisation condition
     Pointer <- 2
+    comparend <- array[Pointer-1] #initialisation condition
     threshold <- 1
 
     while(Pointer < size){
@@ -46,8 +46,8 @@
 #'
 .event_timepoints.helper <- function(array, comparend, Pointer, size){
   threshold <- 1
-  check <- iterators::iter(seq_len(size))
-  while(((comparend + nextElem(check)) == array[Pointer]) & (Pointer <= size)) { # check if we are still in a continguous sequence
+  check <- my_iterator(seq_len(size))
+  while(((comparend + call_iterator(check)) == array[Pointer]) & (Pointer <= size)) { # check if we are still in a continguous sequence
     Pointer <- Pointer + 1
     threshold <- threshold + 1
   }
