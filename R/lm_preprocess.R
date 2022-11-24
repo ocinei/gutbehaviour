@@ -4,6 +4,7 @@
 #' @param average_velocity A data frame of dimension 1*n that contains the average velocities of the n subjects;
 #'
 #' @return A list containing the preprocessed data and other additional information
+#' @export
 #'
 lm_preprocess <- function(data,average_velocity) {
 
@@ -15,6 +16,8 @@ lm_preprocess <- function(data,average_velocity) {
   data <- data %>% t() %>% as_tibble() # data is therefore the transposed form of the csv data imported
   colnames(data) <- time
 
-  Preprocessed_data <- list(data, time, total_subj_number, subject_names)
+  Preprocessed_data <- list(data, time, total_subj_number, subject_names, ave_velocity)
+  names(Preprocessed_data) <- c("processed_data", "time_intervals", "total_subjects_number", "subject_names", "avelocity")
   return(Preprocessed_data)
+
 }

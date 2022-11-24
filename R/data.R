@@ -14,3 +14,10 @@
 #' @format ## `ABX_Looming_baseline`
 #' A data frame with 1 row and 5 columns, each column representing a subject
 "ABX_Looming_baseline"
+
+#' Processed data
+#'
+#' A list of processed data after running lm_preprocess() on ABX_Looming and ABX_Looming_baseline
+#'
+#' @format ## `processed_data`
+#' A list containing the processed data. The first object in the list is the tibble (which should be the transpose of the original data)
