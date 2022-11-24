@@ -7,9 +7,16 @@
 #' @export
 various_lm_plots <- function(Eventprofiles, time = 0) {
   # raster plot
-  time <- time <- as.POSIXct(time,"Asia/Taipei", format="%H:%M:%OS")
-  gp <- ggplot(event_profiles, aes(color = event)) +
-    geom_segment(aes(x = start, xend = end , y = subject, yend = subject), size = 6) +
-    scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S")) + xlab("time (in seconds)") + theme_classic() + geom_vline(xintercept = time, color="blue", linetype="dashed", size = 1)
+  if (time != 0) {
+    time <- time <- as.POSIXct(time,"Asia/Taipei", format="%H:%M:%OS")
+    gp <- ggplot(event_profiles, aes(color = event)) +
+      geom_segment(aes(x = start, xend = end , y = subject, yend = subject), size = 6) +
+      scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S")) + xlab("time (in seconds)") + theme_classic() + geom_vline(xintercept = time, color="blue", linetype="dashed", size = 1)
+  } else {
+    gp <- ggplot(event_profiles, aes(color = event)) +
+      geom_segment(aes(x = start, xend = end , y = subject, yend = subject), size = 6) +
+      scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S")) + xlab("time (in seconds)") + theme_classic()
+  }
+
   return(gp)
 }
