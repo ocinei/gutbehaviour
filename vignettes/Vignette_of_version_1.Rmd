@@ -1,0 +1,134 @@
+---
+title: "Vignette_of_version_1"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette_of_version_1}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Preparatory work 
+
+We will use the functions of gutbehaviour to create a raster plot. 
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+It is assumed `gutbehaviour` is already installed, and the installed package can be loaded via:
+```{r setup, eval = FALSE}
+library(gutbehaviour)
+```
+
+If `gutbehaviour` is not installed, please install it by running the following command at Rstudio console:
+```{r, eval = TRUE}
+if (!("devtools" %in% installed.packages())) {
+  install.packages("devtools")
+  library(devtools)
+  devtools::install_github("amhcam/gutbehaviour")
+  library(gutbehaviour)
+} else {
+  devtools::install_github("amhcam/gutbehaviour")
+  library(gutbehaviour)
+}
+```
+
+Note that if `gutbehaviour` has been installed but it is not in the most updated version, it is advised you re-install it through:
+
+```{r, eval = FALSE}
+remove.packages("gutbehaviour")
+if (!("devtools" %in% installed.packages())) {
+  install.packages("devtools")
+  library(devtools)
+  devtools::install_github("amhcam/gutbehaviour")
+  library(gutbehaviour)
+} else {
+  devtools::install_github("amhcam/gutbehaviour")
+  library(gutbehaviour)
+}
+```
+
+# Loading and pre-processing the data
+
+The data accepted by `gutbehaviour` has to follow some fixed conditions. When `gutbehaviour` is installed and loaded, some example datasets already come with it. We can access and look at the formats of the example datasets through
+
+```{r}
+data <- gutbehaviour::ABX_Looming # This step loads the example dataset
+head(data) # This shows the initial part of the large dataset
+```
+
+As can be seen from the above example, the first column should be the time variable, while the remaining columns represent the subjects. Each entry of the matrix should either be non-empty OR filled with NA if it is missing. 
+
+`gutbehaviour` also requires an average_velocity vector to work. An example is also supplied here:
+
+```{r}
+average_velocity <- gutbehaviour::ABX_Looming_baseline # This step loads the average velocity vector
+average_velocity
+```
+
+The dimension of this vector should be compatible with the dimension of the data matrix. That is, if the matrix is of dimension m*(n+1), then the dimension of this vector should be n. With the data loaded, we first pre-process the data with
+
+```{r}
+P_DATA <- gutbehaviour::lm_preprocess(data, average_velocity = average_velocity) # pre-process the data with `lm_preprocess`
+class(P_DATA) # What is the type of this processed object?
+length(P_DATA) # How many objects is contained in this processed object?
+head(P_DATA$processed_data)
+```
+The output shows that there are 5 objects stored within `P_DATA`, which is a list. The first object contained is a "tibble" that can be understood as an upgraded form of a data matrix. The tibble is simply the transposed form of the original data matrix we input. The rest of this documentation will work with this tibble object. 
+
+# Getting the event profile
+
+```{r}
+eventprof <- gutbehaviour::EventProfiles(P_DATA, freeze_time_duration = 15, flight_time_duration = 3)  # modify the durations here
+eventprof
+```
+The codes above generate an "event profile" given the input `P_DATA` which is the output of `lm_preprocess`. The algorithm identifies all the freezing events and flight events based on the criteria below: for a subject $i$, let the velocity of the subject at time point $x$ be $v^{i}_{x}$, then 
+
+1. A subject $i$ is experiencing a freeze event from time $x$ to $y$ (inclusive) if for any time $t$ between $x$ and $y$ inclusive that
+
+$$ v^{i}_{t} < 0.2 \times \text{average velocity of subject }i$$ 
+
+and the time spanned between $x$ and $y$ inclusive is at least 15 intervals long. 
+
+2. A subject $i$ is experiencing a flight event from time $x$ to $y$ (inclusive) if and only if for any time $t$ between $x$ and $y$ inclusive that
+
+$$ v^{i}_{t} > 3 \times \text{average velocity of subject }i$$ 
+
+and the time spanned between $x$ and $y$ inclusive is at least 3 intervals long.
+
+Each row in the matrix above represents the longest possible freezing event starting from the time `start`. If for a subject no flight or freeze event can be identified based on the above criteria, for the ease of plotting we set the `start` and `end` time for that subject to be zero. For example, `LR` and `N` experienced no freeze.
+
+# Getting a raster plot
+
+To generate the plot we do 
+```{r}
+eventprof <- gutbehaviour::processed_eventprofiles(eventprof)
+plot <- gutbehaviour::various_lm_plots(eventprof, size = 20, time_intervals = P_DATA$time_intervals) # size parameter can be changed and this represents the width of the segment in the raster plot
+plot
+```
+
+Consider the following time interval variable which we get from `P_DATA` before
+
+```{r}
+head(P_DATA$time_intervals)
+```
+
+We see that it contains many time intervals (in fact, 150 of them). The first interval is "0:00:00-0:00:00:00.1" and the fifth interval is "0:00:00.4-0:00:00:00.5". We can identify the corresponding time interval if we are given a positive integer less than or equal to 150. Suppose at 120th time interval and 50th interval two stimuli occur, we can represent these stimuli with a blue vertical line through: 
+
+```{r}
+time_int <- P_DATA$time_intervals # set time_int to be the time intervals of P_DATA
+time_stimuli <- c(time_int[50], time_int[120]) # we record the time of stimuli
+plot <- gutbehaviour::various_lm_plots(eventprof, size = 20, time = time_stimuli, time_intervals = time_int) # we set the time argument to time_stimuli
+plot
+```
+
+
+
+
+
+
+
+
