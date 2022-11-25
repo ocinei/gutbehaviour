@@ -110,6 +110,8 @@ eventprof <- gutbehaviour::processed_eventprofiles(eventprof)
 plot <- gutbehaviour::various_lm_plots(eventprof, size = 6, time_intervals = P_DATA$time_intervals) # size parameter can be changed and this represents the width of the segment in the raster plot
 plot
 ```
+
+
 ## Adding time stimuli bar
 Consider the following time interval variable which we get from `P_DATA` before
 
@@ -119,7 +121,7 @@ head(P_DATA$time_intervals)
 
 We see that it contains many time intervals (in fact, 150 of them). The first interval is "0:00:00-0:00:00:00.1" and the fifth interval is "0:00:00.4-0:00:00:00.5". We can identify the corresponding time interval if we are given a positive integer less than or equal to 150. Suppose at 120th time interval and 50th interval two stimuli occur, we can represent these stimuli with a blue vertical line through: 
 
-```{r echo = FALSE, fig.width = 8}
+```{r fig.width = 8}
 time_int <- P_DATA$time_intervals # set time_int to be the time intervals of P_DATA
 time_stimuli <- c(time_int[50], time_int[120]) # we record the time of stimuli
 plot <- gutbehaviour::various_lm_plots(eventprof, size = 6, time = time_stimuli, time_intervals = time_int) # we set the time argument to time_stimuli
