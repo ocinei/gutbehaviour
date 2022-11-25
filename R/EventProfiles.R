@@ -37,7 +37,7 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
     indices_indices <- .event_timepoints(match_indices,freeze_time_duration) # get the start and end indices of the match indices
     if (length(indices_indices) == 0) { # if we cannot find any freezing event
 
-      result <- c(NA,NA, processed_data$subject_names[i])
+      result <- c("0:00:00-0:00:00","0:00:00-0:00:00", processed_data$subject_names[i])
       FreezeEventProfiles <- c(FreezeEventProfiles, list(result))
 
     } else {
@@ -70,7 +70,7 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
     indices_indices <- .event_timepoints(match_indices,flight_time_duration) # get the start and end indices of the match indices
     if (length(indices_indices) == 0) { # if we cannot find any freezing event
 
-      result <- c(NA,NA, processed_data$subject_names[i])
+      result <- c("0:00:00-0:00:00","0:00:00-0:00:00", processed_data$subject_names[i])
       FlightEventProfiles <- c(FlightEventProfiles, list(result))
 
     } else {

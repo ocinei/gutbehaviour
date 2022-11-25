@@ -9,7 +9,7 @@
   size <- length(array) # length of the array stored in size
   if (size == 0) { # check if the array is empty; return NA if true
 
-    return(NA)
+    return(list())
 
   } else if (m == 1) { # check if m supplied is 1
 
@@ -28,7 +28,7 @@
       Pointer <- check[2]
       threshold <- check[3]
 
-      if (threshold >= m) {
+      if (threshold >= (m-1)) {
         comparend_position <- which(array %in% comparend)
         result <- c(comparend_position, Pointer-1) # result is the position of the comparend and the pointer moved 1 step backward
         Record <- c(Record, list(result)) # append result to list
