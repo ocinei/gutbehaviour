@@ -8,16 +8,21 @@
 #' @return a list of relevant plots, currenlt showing the raster plot first
 #' @export
 various_lm_plots <- function(event_profiles, time = 0, size_parameter = 10, time_intervals) {
+
+  # getting the limits of time_intervals
+  initial_time_limit = gsub("-(.*)","",time_intervals[1])
+  final_time_limit = gsub("(.*)-","",time_intervals[length(time_intervals)])
+
   # raster plot
   if (!is.numeric(time)) {
     time <- as.POSIXct(time,"Asia/Taipei", format="%H:%M:%OS")
     gp <- ggplot(event_profiles, aes(color = event)) +
       geom_segment(aes(x = start, xend = end , y = subject, yend = subject), size = size_parameter) +
-      scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(time_intervals[1],time_intervals[length(time_intervals)]), format = "%H:%M:%OS")) + xlab("time (in seconds)") + theme_light() + geom_vline(xintercept = time, color="blue", linetype="dashed", size = 1)
+      scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + theme_light() + geom_vline(xintercept = time, color="blue", linetype="dashed", size = 1)
   } else {
     gp <- ggplot(event_profiles, aes(color = event)) +
       geom_segment(aes(x = start, xend = end , y = subject, yend = subject), size = size_parameter) +
-      scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(time_intervals[1],time_intervals[length(time_intervals)]), format = "%H:%M:%OS")) + xlab("time (in seconds)") + theme_light()
+      scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + theme_light()
   }
   return(gp)
 }
