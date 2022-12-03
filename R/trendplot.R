@@ -1,4 +1,4 @@
-#' A quick temporary function used for generating trend plot
+#' A quick temporary function used for generating trend plot; to be updated
 #'
 #' @param data the data matrix, ABX_Looming for example
 #' @param avg_velocity the average velocity vector, ABX_Looming_baseline for example
@@ -8,7 +8,9 @@
 trendplot <- function(data, avg_velocity) {
 
   avg.velocty <- my_iterator(as.numeric(avg_velocity))
+  # important: this is the normalisation step
   vdata <- apply(data[,-1], 2, function(x) normalisation(x, avg_velocity = avg.velocty)) %>% as.data.frame() # data normalised by dividing over the subject-specific average velocity and taking log
+  # end of normalisation step
   vdata <- cbind(data$time, vdata)
 
   g_data <- gather(vdata, key = "subjects", value = "log_velocity", 2:ncol(data))

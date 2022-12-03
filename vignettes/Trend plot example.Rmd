@@ -5,6 +5,8 @@ date: "2022-12-03"
 output: html_document
 ---
 
+In this tutorail we will be using `gutbehaviour::trendplot()` function to create a time-series line plot with smoothed curves
+
 # import dataset 
 ```{r}
 data <- gutbehaviour::ABX_Looming # example dataset given by Cindy

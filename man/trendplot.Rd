@@ -2,7 +2,7 @@
 % Please edit documentation in R/trendplot.R
 \name{trendplot}
 \alias{trendplot}
-\title{A quick temporary function used for generating trend plot}
+\title{A quick temporary function used for generating trend plot; to be updated}
 \usage{
 trendplot(data, avg_velocity)
 }
@@ -15,5 +15,5 @@ trendplot(data, avg_velocity)
 a time-series line plot with smoothed curves
 }
 \description{
-A quick temporary function used for generating trend plot
+A quick temporary function used for generating trend plot; to be updated
 }
