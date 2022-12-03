@@ -9,13 +9,43 @@ In this tutorail we will be using `gutbehaviour::trendplot()` function to create
 
 # import dataset 
 ```{r}
-data <- gutbehaviour::ABX_Looming # example dataset given by Cindy
-average.velocity <- gutbehaviour::ABX_Looming_baseline # the associated average velocity vector
+data <- gutbehaviour::ABX_2 # example dataset given by Cindy
+average.velocity <- gutbehaviour::ABX_2_avg_velocity # the associated average velocity vector
 ```
 
 # run trendplot function 
 ```{r}
-plot <- gutbehaviour::trendplot(data, avg_velocity = average.velocity)
-plot
+avg.velocty <- my_iterator(as.numeric(average.velocity))
+# important: this is the normalisation step
+vdata <- apply(data[,-1], 2, function(x) normalisation(x, avg_velocity = avg.velocty)) %>% as.data.frame() # data normalised by dividing over the subject-specific average velocity and taking log
+# end of normalisation step
+vdata <- cbind(data$time, vdata)
+g_data <- gather(vdata, key = "subjects", value = "log_velocity", 2:ncol(data))
+# density_p <- ggplot(g_data, aes(x = log_velocity, y = subjects)) + geom_density_ridges() + theme_classic()
+# time series plot
+colnames(g_data)[1] <- "time"
+g_data$time <- as.POSIXct(g_data$time, "Asia/Taipei", format = "%H:%M:%OS")
+p1 <-ggplot(g_data, aes(x = time, y = log_velocity)) + geom_line() + facet_wrap(vars(subjects), ncol = 6) + stat_smooth() + theme_light() # generate facet plots
 ```
+
+```{r}
+# generate individual level plot
+g_data_subL <- filter(g_data, subjects == "L")
+p2 <- ggplot(g_data_subL, aes(x = time, y = log_velocity)) + geom_line() + stat_smooth() + theme_light() 
+```
+
+```{r}
+P_DATA <- gutbehaviour::lm_preprocess(data, average.velocity)
+event.prof <- gutbehaviour::EventProfiles(P_DATA,freeze_time_duration = 15,flight_time_duration = 3)
+event.prof <- gutbehaviour::processed_eventprofiles(event.prof)
+event.prof_subL <- filter(event.prof, subject == "L")
+colnames(event.prof_subL)[3] <- "subjects"
+colnames(event.prof)[3] <- "subjects"
+event.prof_subL
+p3 <- p2 + geom_segment(data = event.prof_subL, aes(x = start, xend = end, y = 0, yend = 0, color = event), linewidth = 2)
+
+p1 <-ggplot(g_data, aes(x = time, y = log_velocity)) + geom_line() +  geom_segment(data = event.prof, aes(x = start, xend = end, y = -6, yend = -6, color = event), linewidth = 2) + facet_wrap(vars(subjects), ncol = 3) + stat_smooth() + theme_light()
+p1b <-ggplot(g_data, aes(x = time, y = log_velocity)) + geom_line() +  geom_segment(data = event.prof, aes(x = start, xend = end, y = -6, yend = -6, color = event), linewidth = 2) + facet_wrap(vars(subjects), ncol = 3)+ theme_classic()
+```
+
 
