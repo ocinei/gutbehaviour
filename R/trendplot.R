@@ -17,7 +17,7 @@ trendplot <- function(data, avg_velocity) {
   # time series plot
   colnames(g_data)[1] <- "time"
   g_data$time <- as.POSIXct(g_data$time, "Asia/Taipei", format = "%H:%M:%OS")
-  p1 <-ggplot(g_data, aes(x = time, y = log_velocity)) + geom_line() + facet_wrap(vars(subjects), ncol=6 + stat_smooth() + theme_light() # generate facet plots
+  p1 <-ggplot(g_data, aes(x = time, y = log_velocity)) + geom_line() + facet_wrap(vars(subjects), ncol = 6) + stat_smooth() + theme_light() # generate facet plots
 
   return(p1)
 }
