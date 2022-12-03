@@ -1,0 +1,19 @@
+---
+title: "Trend plot example"
+author: "Hephaes"
+date: "2022-12-03"
+output: html_document
+---
+
+# import dataset 
+```{r}
+data <- gutbehaviour::ABX_2 # example dataset given by Cindy
+average.velocity <- gutbehaviour::ABX_2_avg_velocity # the associated average velocity vector
+```
+
+# run trendplot function 
+```{r}
+plot <- gutbehaviour::trendplot(data, avg_velocity = average.velocity)
+plot
+```
+
