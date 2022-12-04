@@ -1,0 +1,44 @@
+---
+title: "Combined_plot_example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Combined_plot_example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+```
+
+# Remove original package and update new package
+
+```{r setup}
+library(gutbehaviour)
+```
+
+# Load example data sets (or your own data set)
+```{r}
+data <- gutbehaviour::ABX_2
+average.velocity <- gutbehaviour::ABX_2_avg_velocity
+```
+
+# Preprocess data to get event profiles
+```{r}
+P.DATA <- gutbehaviour::lm_preprocess(data, average.velocity)
+eventprof <- gutbehaviour::EventProfiles(P.DATA, 15, 3) %>% processed_eventprofiles()
+p1 <- various_lm_plots(eventprof,time_intervals = P.DATA$time_intervals)
+```
+
+# Generate combined plot 
+```{r}
+p1b <- gutbehaviour::combinedplot(data, avg_velocity = average.velocity, event.prof = eventprof)
+p1b
+```
+
+
+

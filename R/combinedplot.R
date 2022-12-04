@@ -20,8 +20,10 @@ combinedplot <- function(data, avg_velocity, event.prof) {
   # data post-processing
   colnames(g_data)[1] <- "time"
   g_data$time <- as.POSIXct(g_data$time, "Asia/Taipei", format = "%H:%M:%OS")
+  colnames(event.prof)[3] <- "subjects"
 
   # combined plot
-  p1b <- ggplot(g_data, aes(x = time, y = log_velocity)) + geom_line() +  geom_segment(data = event.prof, aes(x = start, xend = end, y = -6, yend = -6, color = event), linewidth = 2) + facet_wrap(vars(subjects), ncol = 3)+ theme_classic()
+  p1b <- ggplot(g_data, aes(x = time, y = log_velocity)) + geom_line() +  geom_segment(data = event.prof, aes(x = start, xend = end, y = -6, yend = -6, color = event), linewidth = 2) + facet_wrap(vars(subjects), ncol = 3) + theme_classic()
+
   return(p1b)
 }
