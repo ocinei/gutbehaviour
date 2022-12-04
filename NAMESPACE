@@ -3,6 +3,7 @@
 export(EventProfiles)
 export(EventProfiles2)
 export(call_iterator)
+export(combinedplot)
 export(lm_preprocess)
 export(my_iterator)
 export(processed_eventprofiles)
