@@ -1,0 +1,100 @@
+---
+title: "cumulative_prob_plot"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{cumulative_prob_plot}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(gutbehaviour)
+```
+
+```{r}
+data <- gutbehaviour::ABX_2
+average.velocity <- gutbehaviour::ABX_2_avg_velocity
+result2 <- gutbehaviour::lm_preprocess(data, average.velocity) %>% EventProfiles(freeze_time_duration = 15, flight_time_duration = 3) %>% processed_eventprofiles()
+colnames(result2)[3] <- "subjects"
+total_subj_number <- 12
+result2 <- arrange(result2, start)
+# result2 <- arrange(result1, start)
+result2_freeze <- filter(result2, event == "freeze")
+result2_flight <- filter(result2, event == "flight")
+CDF_result_freeze <- list()
+while (dim(result2_freeze)[1] != 0) {
+  instance <- result2_freeze[1,]
+  subj <- as.character(instance[3])
+  result2_freeze <-  filter(result2_freeze, subjects != subj)
+  CDF_result_freeze <- c(CDF_result_freeze,list(instance)) 
+}
+CDF_result_freeze <- do.call(rbind, CDF_result_freeze)
+CDF_result_freeze$cdf <- sapply(seq_len(dim(CDF_result_freeze)[1]), function(x) step_increase(x, total_subj_number))
+CDF_result_flight <- list()
+while (dim(result2_flight)[1] != 0) {
+  instance <- result2_flight[1,]
+  subj <- as.character(instance[3])
+  result2_flight <-  filter(result2_flight, subjects != subj)
+  CDF_result_flight <- c(CDF_result_flight,list(instance)) 
+}
+CDF_result_flight <- do.call(rbind, CDF_result_flight)
+CDF_result_flight$cdf <- step_increase(dim(CDF_result_flight)[1],total_subj_number)
+CDF_result <- rbind(CDF_result_freeze, CDF_result_flight)
+
+step_increase <- function(n, total_subj_number) {
+  return(call_iterator(n)/total_subj_number)
+}
+```
+
+```{r}
+# creating cumulative probability plot 
+# data preprocessing
+data <- gutbehaviour::ABX_2
+average.velocity <- gutbehaviour::ABX_2_avg_velocity
+result2 <- gutbehaviour::lm_preprocess(data, average.velocity) %>% EventProfiles(freeze_time_duration = 15, flight_time_duration = 3)
+result2 <- filter(result2, end != "0:00:00-0:00:00") # filter all those rows that represent no occurence of either flight or freeze 
+result2 <- processed_eventprofiles(result2)
+
+freeze_profile <- filter(result2, event == "freeze") %>% arrange(start)
+flight_profile <- filter(result2, event == "flight") %>% arrange(start)
+
+subject_records <- c() # this will contain all the subjects that have the freeze events
+to_remove_index <- c() # this will contain the indices of those subjects in freeze_profile that have more than one event
+freeze_subjects <- freeze_profile$subject
+for (i in seq_len(dim(freeze_profile)[1])) {
+  subj <- freeze_subjects[i]
+  if (subj %in% subject_records) {
+    to_remove_index <- c(to_remove_index, i)
+  } else {
+    subject_records <- c(subject_records,subj)
+  }
+}
+pfreeze_profile <- freeze_profile[-to_remove_index,]
+pfreeze_profile$cumuprob <- seq_len(dim(pfreeze_profile)[1])/total_subj_number
+
+subject_records <- c() # this will contain all the subjects that have the flight events
+to_remove_index <- c() # this will contain the indices of those subjects in flight_profile that have more than one event
+flight_subjects <- flight_profile$subject
+for (i in seq_len(dim(flight_profile)[1])) {
+  subj <- flight_subjects[i]
+  if (subj %in% subject_records) {
+    to_remove_index <- c(to_remove_index, i)
+  } else {
+    subject_records <- c(subject_records,subj)
+  }
+}
+pflight_profile <- flight_profile[-to_remove_index,]
+pflight_profile$cumuprob <- seq_len(dim(pflight_profile)[1])/total_subj_number
+subjwiseunique_event_profile <- rbind(pfreeze_profile, pflight_profile)
+
+p <- ggplot(subjwiseunique_event_profile, aes(x=start, y=cumuprob, group=event)) + geom_step(aes(color=event)) + theme_classic()
+```
+
+

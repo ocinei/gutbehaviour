@@ -1,0 +1,48 @@
+---
+title: "cprob_plot_example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{cprob_plot_example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+rmarkdown::render(input = "cprob_plot_example.Rmd", envir = parent.frame())
+```
+
+# Load gutbehaviour 
+
+```{r setup}
+library(gutbehaviour)
+```
+
+# Import example datasets (or your own dataset)
+```{r}
+data <- gutbehaviour::ABX_2
+average.velocity <- gutbehaviour::ABX_2_avg_velocity
+```
+
+# Preprocess dataset
+```{r}
+PDATA <- gutbehaviour::lm_preprocess(data, average.velocity)
+```
+
+# Generate event profile 
+```{r}
+eventprf <- gutbehaviour::EventProfiles(PDATA, 16, 3)
+```
+
+# Generate the cumulative probability plot 
+```{r}
+result <- gutbehaviour::cumuprob_plot(eventprf, PDATA$time_intervals)
+result$plot
+```
+
+
+
+

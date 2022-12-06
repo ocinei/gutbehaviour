@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-
+rmarkdown::render(input = "Combined_plot_example.Rmd", envir = parent.frame())
 ```
 
 # Remove original package and update new package
