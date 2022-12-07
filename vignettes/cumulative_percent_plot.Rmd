@@ -1,0 +1,67 @@
+---
+title: "cumulative_percent_plot"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{cumulative_percent_plot}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE, eval=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(gutbehaviour)
+```
+
+```{r}
+data <- gutbehaviour::ABX_2
+average.velocity <- gutbehaviour::ABX_2_avg_velocity
+PDATA <- gutbehaviour::lm_preprocess(data, average.velocity)
+eventprf <- gutbehaviour::EventProfiles2(PDATA, 10, 3, factor.freeze = 0.05, factor.flight = 2)
+eventprf <- gutbehaviour::processed_eventprofiles(eventprf)
+eventprf
+sub1eventprf <- eventprf %>% filter(subject == "subject1" & event == "flight") %>% arrange(start)
+sub1eventprf
+```
+```{r}
+
+# generate summand (from which the cumupercent vector is generate)
+size <- dim(sub1eventprf)[1]
+if (size == 0) {
+  summand <- NA
+} else if (size == 1) {
+  summand <- c(sub1eventprf[1,2]-sub1eventprf[1,1])
+} else {
+  summand <- c(sub1eventprf[1,2]-sub1eventprf[1,1])
+  for (i in 2:size) {
+    summand <- c(summand, (summand[i-1] + (sub1eventprf[i,2]-sub1eventprf[i,1])))
+  }
+}
+cumupercent <- as.numeric(summand/15*100)
+
+# timepoints (zigzag from subject profile)
+new_dataset <- c(sub1eventprf[1,1], sub1eventprf[1,2])
+inddex <- my_iterator(3:(size*2))
+for (j in 2:size) {
+  for (k in seq_len(2)) {
+    new_dataset[call_iterator(inddex)] <- sub1eventprf[j,k]
+  }
+}
+new_dataset <- as.data.frame(new_dataset)
+
+cumulative_percentage <- c(0)
+reset <- 0
+while(length(cumupercent) != 0) {
+  cumulative_percentage <- c(cumulative_percentage, cumupercent[1])
+  cumulative_percentage <- c(cumulative_percentage, cumupercent[1])
+  cumupercent <- cumupercent[-1]
+}
+new_dataset$`cumulative_percentage` <- cumulative_percentage[-(size*2+1)]
+new_dataset
+```
+

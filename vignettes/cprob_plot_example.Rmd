@@ -7,18 +7,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+```{r, include = FALSE, eval=FALSE}
+# knitr::opts_chunk$set(
+#   collapse = TRUE,
+#   comment = "#>"
+# )
 rmarkdown::render(input = "cprob_plot_example.Rmd", envir = parent.frame())
-```
-
-# Load gutbehaviour 
-
-```{r setup}
-library(gutbehaviour)
 ```
 
 # Import example datasets (or your own dataset)
@@ -34,14 +28,19 @@ PDATA <- gutbehaviour::lm_preprocess(data, average.velocity)
 
 # Generate event profile 
 ```{r}
-eventprf <- gutbehaviour::EventProfiles(PDATA, 40, 3)
+eventprf <- gutbehaviour::EventProfiles2(PDATA, 10, 3, factor.freeze = 0.05, factor.flight = 2)
 ```
-
-# Generate the cumulative probability plot 
+## combined plots
 ```{r}
 result <- gutbehaviour::cumuprob_plot(eventprf, PDATA$time_intervals)
-result$plot
+result$plot # cdf plot
+eventprf <- gutbehaviour::processed_eventprofiles(eventprf)
+combined_plot <- gutbehaviour::combinedplot(data, average.velocity, eventprf)
+combined_plot # combined raster 
+raster <- gutbehaviour::various_lm_plots(eventprf, time_intervals = PDATA$time_intervals)
+raster
 ```
+
 
 
 

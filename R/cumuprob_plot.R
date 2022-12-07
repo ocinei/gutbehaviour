@@ -71,7 +71,7 @@ cumuprob_plot <- function(event.prof, time_intervals) {
   # generate plot
   initial_time_limit = gsub("-(.*)","",time_intervals[1])
   final_time_limit = gsub("(.*)-","",time_intervals[length(time_intervals)])
-  p <- ggplot(subjwiseunique_event_profile, aes(x=start, y=cumuprob, group=event)) + geom_step(aes(color=event)) + scale_x_datetime(breaks = ("5 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + ylab("cumulative probability") + theme_classic()
+  p <- ggplot(subjwiseunique_event_profile, aes(x=start, y=cumuprob, group=event)) + geom_step(aes(color=event)) + scale_x_datetime(breaks = ("5 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + ylab("cumulative probability") + ylim(0,1) + theme_classic()
   result <- list(subjwiseunique_event_profile, p)
   names(result) <- c("unique_event_profile", "plot")
   return(result)
