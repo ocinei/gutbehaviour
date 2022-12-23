@@ -41,7 +41,11 @@ cumuprob_plot <- function(event.prof, time_intervals) {
   pfreeze_profile$cumuprob <- seq_len(dim(pfreeze_profile)[1])/total_subj_number # add the probability vector; at each time step the cumulative prob is increased by 1/total_subj_number
   initial <- list(initial_time_limit, initial_time_limit, "initialPointNotSujbect", "freeze", 0) # these two data points are added so that the cumulative probability plot can flatten towards the end of the period; they are not the data of any subjects
   final <- list(final_time_limit, final_time_limit, "finalPointNotSujbect", "freeze", pfreeze_profile[dim(pfreeze_profile)[1],5])
-  pfreeze_profile <- initial %>% rbind(pfreeze_profile) %>% rbind(final)
+  if (length(pfreeze_profile[dim(pfreeze_profile)[1],5]) == 0) {
+    pfreeze_profile <- initial %>% rbind(pfreeze_profile)
+  } else {
+    pfreeze_profile <- initial %>% rbind(pfreeze_profile) %>% rbind(final)
+  }
 
   # further process flight_profile: remove rows corresponding to subjects with multiple event except for the earliest such event
   subject_records <- c() # this will contain all the subjects that have the flight events
@@ -64,6 +68,7 @@ cumuprob_plot <- function(event.prof, time_intervals) {
   pflight_profile$cumuprob <- seq_len(dim(pflight_profile)[1])/total_subj_number # add the probability vector; at each time step the cumulative prob is increased by 1/total_subj_number
   initial <- list(initial_time_limit, initial_time_limit, "initialPointNotSujbect", "flight", 0)
   final <- list(final_time_limit, final_time_limit, "finalPointNotSujbect", "flight", pflight_profile[dim(pflight_profile)[1],5])
+
   pflight_profile <- initial %>% rbind(pflight_profile) %>% rbind(final)
 
   # combining profiles, returning results
