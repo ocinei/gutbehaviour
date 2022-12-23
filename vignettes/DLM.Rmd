@@ -1,0 +1,12 @@
+---
+title: "Dynamic Linear Model"
+author: "Hephaes"
+date: "2022-12-23"
+output: html_document
+---
+
+```{r}
+data <- read.csv("VAN.csv")
+data <- data[-1]
+```
+
