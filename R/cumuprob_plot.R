@@ -42,8 +42,9 @@ cumuprob_plot <- function(event.prof, time_intervals) {
   initial <- list(initial_time_limit, initial_time_limit, "initialPointNotSujbect", "freeze", 0) # these two data points are added so that the cumulative probability plot can flatten towards the end of the period; they are not the data of any subjects
   final <- list(final_time_limit, final_time_limit, "finalPointNotSujbect", "freeze", pfreeze_profile[dim(pfreeze_profile)[1],5])
   if (length(pfreeze_profile[dim(pfreeze_profile)[1],5]) == 0) {
-    pfreeze_profile <- data.frame(initial[[1]], initial[[2]], initial[[3]], initial[[4]], initial[[5]])
+    pfreeze_profile <- data.frame(initial[[1]], final_time_limit, initial[[3]], initial[[4]], initial[[5]])
     names(pfreeze_profile) <- c("start", "end", "subject", "event", "cumuprob")
+    nofreeze <- 1
   } else {
     pfreeze_profile <- initial %>% rbind(pfreeze_profile) %>% rbind(final)
   }
@@ -69,15 +70,26 @@ cumuprob_plot <- function(event.prof, time_intervals) {
   pflight_profile$cumuprob <- seq_len(dim(pflight_profile)[1])/total_subj_number # add the probability vector; at each time step the cumulative prob is increased by 1/total_subj_number
   initial <- list(initial_time_limit, initial_time_limit, "initialPointNotSujbect", "flight", 0)
   final <- list(final_time_limit, final_time_limit, "finalPointNotSujbect", "flight", pflight_profile[dim(pflight_profile)[1],5])
-
-  pflight_profile <- initial %>% rbind(pflight_profile) %>% rbind(final)
+  if (length(pflight_profile[dim(pflight_profile)[1],5]) == 0) {
+    pflight_profile <- data.frame(initial[[1]], final_time_limit, initial[[3]], initial[[4]], initial[[5]])
+    names(pflight_profile) <- c("start", "end", "subject", "event", "cumuprob")
+    noflight <- 1
+  } else {
+    pflight_profile <- initial %>% rbind(pflight_profile) %>% rbind(final)
+  }
 
   # combining profiles, returning results
   subjwiseunique_event_profile <- rbind(pfreeze_profile, pflight_profile)
   # generate plot
   initial_time_limit = gsub("-(.*)","",time_intervals[1])
   final_time_limit = gsub("(.*)-","",time_intervals[length(time_intervals)])
-  p <- ggplot(subjwiseunique_event_profile, aes(x=start, y=cumuprob, group=event)) + geom_step(aes(color=event)) + scale_x_datetime(breaks = ("5 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + ylab("cumulative probability") + ylim(0,1) + theme_classic()
+  if (nofreeze == 1) {
+    p <- ggplot(subjwiseunique_event_profile, aes(x=start, y=cumuprob, group=event)) + geom_step(aes(color=event)) + scale_x_datetime(breaks = ("5 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + ylab("cumulative probability") + geom_hline(yintercept = 0, color = "#00C3C6") + ylim(0,1) + theme_classic()
+  } else if (noflight == 1) {
+    p <- ggplot(subjwiseunique_event_profile, aes(x=start, y=cumuprob, group=event)) + geom_step(aes(color=event)) + scale_x_datetime(breaks = ("5 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + ylab("cumulative probability") + geom_hline(yintercept = 0, color = "#FF6C67") + ylim(0,1) + theme_classic()
+  } else {
+    p <- ggplot(subjwiseunique_event_profile, aes(x=start, y=cumuprob, group=event)) + geom_step(aes(color=event)) + scale_x_datetime(breaks = ("5 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + ylab("cumulative probability") + ylim(0,1) + theme_classic()
+  }
   result <- list(subjwiseunique_event_profile, p)
   names(result) <- c("unique_event_profile", "plot")
   return(result)
