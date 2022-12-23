@@ -1,0 +1,21 @@
+---
+title: "Model 1 and 2"
+author: "Hephaes"
+date: "2022-12-23"
+output: html_document
+---
+
+# Introduction 
+
+In this set of notes I would like to apply model 1 and model 2 to analyse the VAN_SPF data. 
+```{r}
+data <- read.csv("VAN.csv")
+data <- data[-1]
+
+# identifying all positions with NA
+positions <- as.data.frame(is.na(data) + 0 ) # 1 represents NA present
+
+# replace NA with 9999
+data[is.na(data)] <- 9999
+```
+
