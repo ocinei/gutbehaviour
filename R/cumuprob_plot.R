@@ -42,7 +42,8 @@ cumuprob_plot <- function(event.prof, time_intervals) {
   initial <- list(initial_time_limit, initial_time_limit, "initialPointNotSujbect", "freeze", 0) # these two data points are added so that the cumulative probability plot can flatten towards the end of the period; they are not the data of any subjects
   final <- list(final_time_limit, final_time_limit, "finalPointNotSujbect", "freeze", pfreeze_profile[dim(pfreeze_profile)[1],5])
   if (length(pfreeze_profile[dim(pfreeze_profile)[1],5]) == 0) {
-    pfreeze_profile <- initial %>% rbind(pfreeze_profile)
+    pfreeze_profile <- data.frame(initial[[1]], initial[[2]], initial[[3]], initial[[4]], initial[[5]])
+    names(pfreeze_profile) <- c("start", "end", "subject", "event", "cumuprob")
   } else {
     pfreeze_profile <- initial %>% rbind(pfreeze_profile) %>% rbind(final)
   }
