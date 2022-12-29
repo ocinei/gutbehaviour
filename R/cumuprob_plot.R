@@ -46,6 +46,7 @@ cumuprob_plot <- function(event.prof, time_intervals) {
     names(pfreeze_profile) <- c("start", "end", "subject", "event", "cumuprob")
     nofreeze <- 1
   } else {
+    nofreeze <- 0
     pfreeze_profile <- initial %>% rbind(pfreeze_profile) %>% rbind(final)
   }
 
@@ -75,6 +76,7 @@ cumuprob_plot <- function(event.prof, time_intervals) {
     names(pflight_profile) <- c("start", "end", "subject", "event", "cumuprob")
     noflight <- 1
   } else {
+    noflight <- 0
     pflight_profile <- initial %>% rbind(pflight_profile) %>% rbind(final)
   }
 
