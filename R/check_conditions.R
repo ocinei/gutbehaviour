@@ -30,3 +30,8 @@
   vec <- vec > (factor_flight * call_iterator(ave_velocity)) # specify the required condition here
   return(vec)
 }
+#' A function for checking shelter condition
+.check_shelter <- function(vec) {
+vec <- is.na(vec)
+return(vec)
+}

@@ -53,3 +53,94 @@
   }
   return(c(comparend, Pointer, threshold))
 }
+#' Given a numeric containing only integers return the start and ending indices of all the possible continguous subsequences (including that of only length 1)
+#'
+#' @param array the array to be input
+#'
+#' @return Record, a list of tuples (x,y) where x and y are the starting and the ending indices of any possible continguous subsequence (including that of only length 1; in such case the indices are repeated)
+#'
+.event_timepoints_all <- function(array) {
+  Record <- list()
+  term_index <- length(array)
+  if (length(array) == 1) {
+    result <- c(1, 1)
+    Record <- c(Record, list(result))
+    return(Record)
+  }
+  else if (length(array) == 2){
+    if (array[2] == array[1] + 1){
+      result <- c(1,2)
+      Record <- c(Record, list(result))
+    }
+    else {
+      Record <- c(Record, list(c(1,1)), list(c(2,2)))
+    }
+    return(Record)
+  }
+  else {
+    Pointer_a <- 1
+    Pointer_b <- 2
+    comparend <- array[Pointer_a]
+    comparer <- array[Pointer_b]
+    while (Pointer_a < term_index & Pointer_b <= term_index) {
+      result_pointers <- .event_timepoints_helper_all(Pointer_a, Pointer_b, array, term_index)
+      Pointer_a <- result_pointers[1]
+      Pointer_b <- result_pointers[2]
+      if (Pointer_a == Pointer_b) {
+        result <- c(Pointer_a, Pointer_b)
+        Record <- c(Record, list(result))
+        Pointer_a <- Pointer_a + 1
+        Pointer_b <- Pointer_b + 2
+      } else {
+        if ((Pointer_b + 1) == term_index) {
+          result <- c(Pointer_a, Pointer_b)
+          Record <- c(Record, list(result))
+          result <- c(Pointer_b+1, Pointer_b+1)
+          Record <- c(Record, list(result))
+          return(Record)
+        } else {
+          result <- c(Pointer_a, Pointer_b)
+          Record <- c(Record, list(result))
+          Pointer_a <- Pointer_b + 1
+          Pointer_b <- Pointer_b + 2
+        }
+      }
+  }
+  return(Record)
+  }
+}
+#' helper function for .event_timepoints_all
+.event_timepoints_helper_all <- function(Pointer_a, Pointer_b, array, term_index){
+  counter <- my_iterator(seq_len(term_index))
+  comparend <- array[Pointer_a]
+  comparer <- array[Pointer_b]
+  computed <- (comparend + call_iterator(counter))
+  if (computed != comparer) {
+    Pointer_b <- Pointer_a
+    return(c(Pointer_a,Pointer_b))
+  }
+  else {
+    Pointer_b <- Pointer_b + 1
+    comparer <- array[Pointer_b]
+    while ((comparend + call_iterator(counter)) == comparer) {
+      Pointer_b <- Pointer_b + 1
+      comparer <- array[Pointer_b]
+      if (Pointer_b >= term_index) {
+        if (((comparend + call_iterator(counter)) == comparer) | is.na(comparer)) {
+          if (Pointer_b == term_index) {
+            return(c(Pointer_a, Pointer_b))
+          } else {
+            return(c(Pointer_a, Pointer_b-1))
+          }
+        }
+        else {
+          return(c(Pointer_a, Pointer_b - 1))
+        }
+      }
+      else {
+        next
+      }
+    }
+    return(c(Pointer_a, Pointer_b - 1))
+  }
+}

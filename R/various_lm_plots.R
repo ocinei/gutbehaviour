@@ -18,11 +18,12 @@ various_lm_plots <- function(event_profiles, time = 0, size_parameter = 10, time
     time <- as.POSIXct(time,"Asia/Taipei", format="%H:%M:%OS")
     gp <- ggplot(event_profiles, aes(color = event)) +
       geom_segment(aes(x = start, xend = end , y = subject, yend = subject), size = size_parameter) +
-      scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + theme_light() + geom_vline(xintercept = time, color="blue", linetype="dashed", size = 1)
+      scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + theme_light() + geom_vline(xintercept = time, color="blue", linetype="dashed", size = 1) + scale_colour_manual(values = c("#A9A9A9","#E26860","#53B0B5","#F5D584"))
   } else {
     gp <- ggplot(event_profiles, aes(color = event)) +
       geom_segment(aes(x = start, xend = end , y = subject, yend = subject), size = size_parameter) +
-      scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + theme_light()
+      scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + theme_light() + scale_colour_manual(values = c("#A9A9A9","#E26860","#53B0B5","#F5D584"))
   }
   return(gp)
 }
+

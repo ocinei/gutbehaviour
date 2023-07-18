@@ -1,0 +1,30 @@
+---
+title: "Lab1"
+author: "Hephaes"
+date: "2023-06-18"
+output: html_document
+---
+
+```{r}
+data <- gutbehaviour::ABX_2
+average.velocity <- gutbehaviour::ABX_2_avg_velocity
+P.DATA <- gutbehaviour::lm_preprocess(data, average.velocity)
+```
+
+```{r}
+event_profiles <- EventProfiles_all(P.DATA, 10, 3, factor.freeze = 0.05, factor.flight = 2)
+```
+
+
+```{r}
+eventless_profile <- .EventlessProfile(event_profiles, P.DATA)
+```
+```{r}
+processed_event_prof <- rbind(event_profiles[[1]], eventless_profile) %>% processed_eventprofiles()
+```
+
+```{r}
+raster <- various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals)
+```
+
+
