@@ -137,6 +137,7 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
   return(result)
 }
 #' Helper function for identifying the time points at which there are no events
+#' @export
 .EventlessProfile <- function(ident, processed_data) {
   EventlessProfiles <- list()
   time_lengths <- length(processed_data$time_intervals)
