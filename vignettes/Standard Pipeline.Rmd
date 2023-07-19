@@ -3,12 +3,12 @@ title: "Standard Pipeline"
 author: "Hephaes"
 date: "2023-06-18"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 # Removing old package and installing the new one
-```{r, cache = TRUE}
+```{r, cache = TRUE, results='hide', message=FALSE, warning=FALSE}
 remove.packages("gutbehaviour")
 library(tidyverse)
 library(devtools)
@@ -17,8 +17,10 @@ devtools::install_github("ocinei/gutbehaviour")
 
 # Data imports and preprocessing 
 ```{r}
-data <- gutbehaviour::ABX_2 # data matrix here
-average.velocity <- gutbehaviour::ABX_2_avg_velocity # average velocity here 
+library(devtools)
+library(tidyverse)
+data <- mice_1 # data matrix here
+average.velocity <- mice_1_velocity # average velocity here 
 P.DATA <- gutbehaviour::lm_preprocess(data, average.velocity)
 ```
 
@@ -32,7 +34,7 @@ eventless_profile <- gutbehaviour::.EventlessProfile(event_profiles, P.DATA)
 ```
 
 ```{r}
-processed_event_prof <- rbind(event_profiles[[1]], eventless_profile) %>% processed_eventprofiles()
+processed_event_prof <- rbind(event_profiles[[1]], eventless_profile) %>% gutbehaviour::processed_eventprofiles()
 ```
 
 # Plotting 
@@ -41,7 +43,22 @@ cumuprob_plot_new <- gutbehaviour::cumuprob_plot(event_profiles[[1]], P.DATA$tim
 ```
 
 ```{r}
-raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals)
+i = 3
+ident = event_profiles
+time_lengths = 150
+freeze_events_indices <- .eventless_helper(ident, i, condition = "freeze")
+flight_event_indices <- .eventless_helper(ident, i, condition = "flight")
+shelter_event_indices <- .eventless_helper(ident, i, condition = "shelter")
+event_indices <- c(freeze_events_indices, flight_event_indices, shelter_event_indices)
+eventless_boolean <- seq_len(time_lengths) %in% event_indices
+eventless_indices <- seq_len(time_lengths)[!eventless_boolean]
+match_indices <- eventless_indices
+indices_indices <- .event_timepoints_all(eventless_indices)
+```
+
+
+```{r}
+raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals, size_parameter = 10)
 ```
 
 ```{r}

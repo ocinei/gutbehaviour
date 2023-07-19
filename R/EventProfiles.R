@@ -151,7 +151,7 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
     eventless_boolean <- seq_len(time_lengths) %in% event_indices
     eventless_indices <- seq_len(time_lengths)[!eventless_boolean]
     match_indices <- eventless_indices
-    indices_indices <- .event_timepoints(eventless_indices, 2)
+    indices_indices <- .event_timepoints_all(eventless_indices)
     if (length(indices_indices) == 0) {
 
       result <- c("0:00:00-0:00:00","0:00:00-0:00:00", processed_data$subject_names[i], "eventless")
