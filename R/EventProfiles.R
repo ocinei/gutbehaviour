@@ -142,7 +142,7 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
   time_lengths <- length(processed_data$time_intervals)
   subjects_no <- length(processed_data$subject_names)
   for(i in seq_len(subjects_no)) {
-    print(i)
+
     freeze_events_indices <- .eventless_helper(ident, i, condition = "freeze")
     flight_event_indices <- .eventless_helper(ident, i, condition = "flight")
     shelter_event_indices <- .eventless_helper(ident, i, condition = "shelter")
