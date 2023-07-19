@@ -177,6 +177,7 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
   return(EventlessProfiles)
 }
 #' Helper function for identifying eventless profiles
+#' @export
 .eventless_helper <- function(result, i, condition = "freeze"){
   if (condition == "freeze"){
     len = length(result[[2]])
