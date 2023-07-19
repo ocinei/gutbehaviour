@@ -28,6 +28,7 @@ EventProfiles2 <- function(processed_data, freeze_time_duration, flight_time_dur
   return(EventProfiles)
 }
 #' A function for creating event profiles given processed data from lm experiment, using specific check_conditions functions. Moreover, sheltering events are also identified.
+#' @export
 EventProfiles_all <- function(processed_data, freeze_time_duration, flight_time_duration, factor.freeze = 0.2, factor.flight = 3) {
   processed_data_matrix <- processed_data$processed_data
   ave_velocity <- my_iterator(processed_data$avelocity)

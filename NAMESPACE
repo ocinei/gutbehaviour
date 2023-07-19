@@ -2,6 +2,7 @@
 
 export(EventProfiles)
 export(EventProfiles2)
+export(EventProfiles_all)
 export(call_iterator)
 export(combinedplot)
 export(cumuprob_plot)

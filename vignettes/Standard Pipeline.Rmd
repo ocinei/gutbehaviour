@@ -7,6 +7,14 @@ output:
   html_document: default
 ---
 
+# Removing old package and installing the new one
+```{r, cache = TRUE}
+remove.packages("gutbehaviour")
+library(tidyverse)
+library(devtools)
+devtools::install_github("ocinei/gutbehaviour")
+```
+
 # Data imports and preprocessing 
 ```{r}
 data <- gutbehaviour::ABX_2 # data matrix here
@@ -16,11 +24,11 @@ P.DATA <- gutbehaviour::lm_preprocess(data, average.velocity)
 
 # Standard pipeline
 ```{r}
-event_profiles <- EventProfiles_all(P.DATA, 10, 3, factor.freeze = 0.05, factor.flight = 2)
+event_profiles <- gutbehaviour::EventProfiles_all(P.DATA, 10, 3, factor.freeze = 0.05, factor.flight = 2)
 ```
 
 ```{r}
-eventless_profile <- .EventlessProfile(event_profiles, P.DATA)
+eventless_profile <- gutbehaviour::.EventlessProfile(event_profiles, P.DATA)
 ```
 
 ```{r}
@@ -29,11 +37,20 @@ processed_event_prof <- rbind(event_profiles[[1]], eventless_profile) %>% proces
 
 # Plotting 
 ```{r}
-cumuprob_plot_new <- cumuprob_plot(event_profiles[[1]], P.DATA$time_intervals)
+cumuprob_plot_new <- gutbehaviour::cumuprob_plot(event_profiles[[1]], P.DATA$time_intervals)
 ```
 
 ```{r}
-raster <- various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals)
+raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals)
 ```
+
+```{r}
+cumuprob_plot_new$plot
+```
+
+```{r}
+raster
+```
+
 
 
