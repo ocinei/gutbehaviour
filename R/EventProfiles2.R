@@ -31,11 +31,19 @@ EventProfiles2 <- function(processed_data, freeze_time_duration, flight_time_dur
 #' @export
 EventProfiles_all <- function(processed_data, freeze_time_duration, flight_time_duration, factor.freeze = 0.2, factor.flight = 3) {
   processed_data_matrix <- processed_data$processed_data
+  total_subjects <- dim(processed_data_matrix)[2]
+  average_velocity <- processed_data$avelocity
   ave_velocity <- my_iterator(processed_data$avelocity)
   ave_velocity2 <- my_iterator(processed_data$avelocity)
-  Match_freeze <- apply(processed_data_matrix, 1, function(x) .check_freeze2(x, ave_velocity, factor.freeze)) #update check_freeze2
-  Match_flight <- apply(processed_data_matrix, 1, function(x) .check_flight2(x, ave_velocity2, factor.flight)) #update check_flight2
-  Match_shelter <- apply(processed_data_matrix, 1, function(x){.check_shelter(x)})
+  Match_freeze <- lapply(seq_len(total_subjects), function(x){processed_data_matrix[,x] < average_velocity[x]*factor.freeze})
+  Match_flight <- lapply(seq_len(total_subjects), function(x){processed_data_matrix[,x] > average_velocity[x]*factor.flight})
+  Match_shelter <- lapply(seq_len(total_subjects), function(x){is.na(processed_data_matrix[,x])})
+  Match_freeze <- do.call(cbind, Match_freeze)
+  Match_flight <- do.call(cbind, Match_flight)
+  Match_shelter <- do.call(cbind, Match_shelter)
+  #Match_freeze <- apply(processed_data_matrix, 2, function(x) .check_freeze2(x, ave_velocity, factor.freeze)) #update check_freeze2
+  #Match_flight <- apply(processed_data_matrix, 2, function(x) .check_flight2(x, ave_velocity2, factor.flight)) #update check_flight2
+  #Match_shelter <- apply(processed_data_matrix, 2, function(x){.check_shelter(x)})
 
   Freeze_result <- .FreezeProfile(Match_freeze, freeze_time_duration, processed_data)
   Flight_result <- .FlightProfile(Match_flight, flight_time_duration, processed_data)
@@ -61,5 +69,6 @@ EventProfiles_all <- function(processed_data, freeze_time_duration, flight_time_
   colnames(EventProfiles) <- c("start", "end", "subject", "event")
 
   result <- list(EventProfiles, Freeze_indices, Flight_indices, Shelter_indices)
+  #result <- list(Match_freeze, Match_flight, Match_shelter)
   return(result)
 }

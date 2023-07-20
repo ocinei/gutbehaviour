@@ -13,7 +13,7 @@ lm_preprocess <- function(data,average_velocity) {
   data <- data[,-1] # subjects data
   total_subj_number <- dim(data)[2]
   subject_names <- colnames(data)
-  data <- data %>% t() %>% as_tibble() # data is therefore the transposed form of the csv data imported
+  data <- data %>% as_tibble() # data is therefore the transposed form of the csv data imported
   colnames(data) <- time
 
   Preprocessed_data <- list(data, time, total_subj_number, subject_names, ave_velocity)
