@@ -34,7 +34,8 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
 
     match_vec <- Match_freeze[,i] # get the i-th column
     match_indices <- which(match_vec == TRUE) # access the indices of timepoints which corresponds to TRUE
-    indices_indices <- .event_timepoints(match_indices,freeze_time_duration) # get the start and end indices of the match indices
+    indices_indices <- all_contig_sequence(match_indices) # get the start and end indices of the match indices
+    indices_indices <- indices_indices[as.logical(lapply(indices_indices, function(x){filter_not_long(x,min_length = freeze_time_duration)}))]
     freeze_match_indices <- c(NULL)
     if (length(indices_indices) == 0) { # if we cannot find any freezing event
 
@@ -46,16 +47,15 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
 
       for (j in indices_indices) {
 
-        start_index <- j[1]
-        end_index <- j[2]
-        match_start_index <- match_indices[start_index]
-        match_end_index <- match_indices[end_index]
+        match_start_index <- j[1]
+        match_end_index <- j[2]
         start_time <- processed_data$time_intervals[match_start_index]
         end_time <- processed_data$time_intervals[match_end_index]
         result <- c(start_time, end_time, processed_data$subject_names[i])
         FreezeEventProfiles <- c(FreezeEventProfiles, list(result))
         freeze_match_indices <- c(freeze_match_indices, seq(from = match_start_index, to = match_end_index))
-      }
+
+        }
       FreezeMatchIndices[[i]] <- freeze_match_indices
     }
 
@@ -71,7 +71,8 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
 
     match_vec <- Match_flight[,i] # get the i-th column
     match_indices <- which(match_vec == TRUE) # access the indices of timepoints which corresponds to TRUE
-    indices_indices <- .event_timepoints(match_indices,flight_time_duration) # get the start and end indices of the match indices
+    indices_indices <- all_contig_sequence(match_indices) # get the start and end indices of the match indices
+    indices_indices <- indices_indices[as.logical(lapply(indices_indices, function(x){filter_not_long(x,min_length = flight_time_duration)}))]
     flight_match_indices <- c(NULL)
     if (length(indices_indices) == 0) { # if we cannot find any freezing event
 
@@ -82,10 +83,8 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
 
       for (j in indices_indices) {
 
-        start_index <- j[1]
-        end_index <- j[2]
-        match_start_index <- match_indices[start_index]
-        match_end_index <- match_indices[end_index]
+        match_start_index <- j[1]
+        match_end_index <- j[2]
         start_time <- processed_data$time_intervals[match_start_index]
         end_time <- processed_data$time_intervals[match_end_index]
         result <- c(start_time, end_time, processed_data$subject_names[i])
@@ -107,7 +106,7 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
 
     match_vec <- Match_shelter[,i] # get the i-th column
     match_indices <- which(match_vec == TRUE) # access the indices of timepoints which corresponds to TRUE
-    indices_indices <- .event_timepoints(match_indices,2) # get the start and end indices of the match indices
+    indices_indices <- all_contig_sequence(match_indices) # get the start and end indices of the match indices
     shelter_match_indices <- c(NULL)
     if (length(indices_indices) == 0) { # if we cannot find any freezing event
 
@@ -119,10 +118,9 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
 
       for (j in indices_indices) {
 
-        start_index <- j[1]
-        end_index <- j[2]
-        match_start_index <- match_indices[start_index]
-        match_end_index <- match_indices[end_index]
+
+        match_start_index <- j[1]
+        match_end_index <- j[2]
         start_time <- processed_data$time_intervals[match_start_index]
         end_time <- processed_data$time_intervals[match_end_index]
         result <- c(start_time, end_time, processed_data$subject_names[i])
@@ -151,7 +149,7 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
     eventless_boolean <- seq_len(time_lengths) %in% event_indices
     eventless_indices <- seq_len(time_lengths)[!eventless_boolean]
     match_indices <- eventless_indices
-    indices_indices <- .event_timepoints_all(eventless_indices)
+    indices_indices <- all_contig_sequence(match_indices) # get the start and end indices of the match indices
     if (length(indices_indices) == 0) {
 
       result <- c("0:00:00-0:00:00","0:00:00-0:00:00", processed_data$subject_names[i], "eventless")
@@ -161,10 +159,8 @@ EventProfiles <- function(processed_data, freeze_time_duration, flight_time_dura
 
       for (j in indices_indices) {
 
-        start_index <- j[1]
-        end_index <- j[2]
-        match_start_index <- match_indices[start_index]
-        match_end_index <- match_indices[end_index]
+        match_start_index <- j[1]
+        match_end_index <- j[2]
         start_time <- processed_data$time_intervals[match_start_index]
         end_time <- processed_data$time_intervals[match_end_index]
         result <- c(start_time, end_time, processed_data$subject_names[i], "eventless")

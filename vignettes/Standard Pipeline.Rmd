@@ -19,8 +19,8 @@ devtools::install_github("ocinei/gutbehaviour")
 ```{r}
 library(devtools)
 library(tidyverse)
-data <- mice_1 # data matrix here
-average.velocity <- mice_1_velocity # average velocity here 
+data <- all_mice # data matrix here
+average.velocity <- all_mice_velocity # average velocity here 
 P.DATA <- gutbehaviour::lm_preprocess(data, average.velocity)
 ```
 
@@ -58,7 +58,7 @@ indices_indices <- .event_timepoints_all(eventless_indices)
 
 
 ```{r}
-raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals, size_parameter = 10)
+raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals, size_parameter = 0.5)
 ```
 
 ```{r}
