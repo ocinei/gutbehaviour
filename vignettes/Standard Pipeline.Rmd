@@ -27,7 +27,7 @@ P.DATA <- gutbehaviour::lm_preprocess(data, average.velocity)
 
 # Standard pipeline
 ```{r}
-event_profiles <- gutbehaviour::EventProfiles_all(P.DATA, 16, 4, factor.freeze = 0.2, factor.flight = 3)
+event_profiles <- gutbehaviour::EventProfiles_all(P.DATA, 14, 2, factor.freeze = 0.2, factor.flight = 3)
 ```
 
 ```{r}
@@ -44,7 +44,7 @@ cumuprob_plot_new <- gutbehaviour::cumuprob_plot(event_profiles[[1]], P.DATA$tim
 ```
 
 ```{r}
-raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals, size_parameter = 1)
+raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals, size_parameter = 1.5)
 ```
 
 ```{r}
@@ -53,6 +53,25 @@ cumuprob_plot_new$plot
 
 ```{r}
 raster
+```
+```{r}
+raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals, size_parameter = 1.5)
+raster_rearranged <- raster + scale_y_discrete(limits = factor(seq_len(121)))
+raster_rearranged <- raster_rearranged + theme(
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.background = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.border = element_blank(),
+  axis.title.y.left = element_blank())
+```
+
+```{r}
+png(file="new_raster.png",
+width=1000, height=1000)
+raster_rearranged
+dev.off()
 ```
 
 
