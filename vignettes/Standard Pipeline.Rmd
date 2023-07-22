@@ -54,6 +54,7 @@ cumuprob_plot_new$plot
 ```{r}
 raster
 ```
+
 ```{r}
 raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals, size_parameter = 1.5)
 raster_rearranged <- raster + scale_y_discrete(limits = factor(seq_len(121)))
