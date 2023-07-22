@@ -14,6 +14,7 @@ This notebook summarises the existing functions in gutbehaviour for descriptive 
 # Data imports and preprocessing
 ```{r}
 library(tidyverse)
+library(gutbehaviour)
 data <- read.csv("/Users/hephaescheun/Documents/gutbehaviour_data_confid/all_mice.csv") # data matrix here
 average.velocity <- read.csv("/Users/hephaescheun/Documents/gutbehaviour_data_confid/all_mice_velocity.csv") # average velocity here 
 P.DATA <- gutbehaviour::lm_preprocess(data, average.velocity)
@@ -37,11 +38,18 @@ cumuprob_plot_new <- gutbehaviour::cumuprob_plot(event_profiles[[1]], P.DATA$tim
 raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals, size_parameter = 2)
 ```
 
-```{r, out.width="700px", out.height="500px"}
-raster
+```{r, fig.width=7, fig.height=7, out.width="700px", out.height="700px"}
+raster + theme(
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.background = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.border = element_blank(),
+  axis.title.y.left = element_blank())
 ```
 
-```{r, out.width="700px", out.height="500px"}
+```{r, fig.width=7, fig.height=7, out.width="700px", out.height="700px"}
 cumuprob_plot_new$plot
 ```
 
@@ -61,18 +69,18 @@ freezing_cumu <- gutbehaviour::generate_cumutime_per_event(master_cumulative_pro
 
 We have to pass in the names of the subjects for which we intend to make the plot. Note that the names of the subjects have to be the same as the names of the subjects passed in the original csv data file imported.
 ```{r, cache = TRUE}
-subjects_considered <- c("subject1","subject2","subject3") # add the names of the subjects for which the plot is intended; if all subjects are being considered, pass in P.DATA$subject_names
+subjects_considered <- c("subject1","subject2","subject3","subject4","subject5","subject117") # add the names of the subjects for which the plot is intended; if all subjects are being considered, pass in P.DATA$subject_names
 freezing_plot <- gutbehaviour::accumulated_time_plot(freezing_cumu, experiment_time_in_sec = 15, subject_vec = subjects_considered) # change experiment_time_in_sec to 20 if the entire experiment takes 20 seconds
 ```
 
 The following plot means that, for subject 3, at time = 10 seconds, the subject has already spent 0.25x15=3.75 seconds of time in freezing. The subject is not experiencing any freezing event during the time in which the slope is 0 (horizontal line). 
-```{r, out.width="700px", out.height="500px"}
+```{r, fig.width=7, fig.height=7, out.width="700px", out.height="700px"}
 freezing_plot
 ```
 
 # Heat map of proportion of time spent on each event 
 
-At a fixed time t, for each subject S and each event E we are interesting in the quantity "Amount of time spent in E before time t/Total time of experiment". We can compute and visualise this quantity using the following functions. 
+At a fixed time t, for each subject S and each event E we are interested in the quantity "Amount of time spent in E before time t/Total time of experiment". We can compute and visualise this quantity using the following functions. 
 
 ```{r, cache=TRUE}
 cumu <- gutbehaviour::generate_cumutime_all_events(master_cumulative_prof[[2]], P.DATA, master_cumulative_prof[[1]])
@@ -89,7 +97,7 @@ Note that the parameter subject_vec requires us to specify the subjects for whic
 heat_map <- accumulated_time_heat_plot(cumu_prof, master_cumulative_prof = master_cumulative_prof, time_to_consider = 15, experiment_time_in_sec = 15, subject_vec = subjects_considered, show_values = TRUE)
 ```
 
-```{r}
+```{r, fig.width=7, fig.height=7, out.width="700px", out.height="700px"}
 heat_map
 ```
 
