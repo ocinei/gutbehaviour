@@ -7,26 +7,15 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
-```{r setup}
-library(gutbehaviour)
-```
-
 ```{r}
 library(tidyverse)
-data <- gutbehaviour::ABX_2 # data matrix here
-average.velocity <- gutbehaviour::ABX_2_avg_velocity # average velocity here 
+data <- read.csv("/Users/hephaescheun/Documents/gutbehaviour_data_confid/all_mice.csv") # data matrix here
+average.velocity <- read.csv("/Users/hephaescheun/Documents/gutbehaviour_data_confid/all_mice_velocity.csv") # average velocity here 
 P.DATA <- gutbehaviour::lm_preprocess(data, average.velocity)
 ```
 
 ```{r}
-event_profiles <- gutbehaviour::EventProfiles_all(P.DATA, 10, 3, factor.freeze = 0.05, factor.flight = 2)
+event_profiles <- gutbehaviour::EventProfiles_all(P.DATA, 14, 2, factor.freeze = 0.2, factor.flight = 3)
 ```
 
 ```{r}
@@ -34,34 +23,15 @@ event.prof <- event_profiles[[1]] %>% gutbehaviour::processed_eventprofiles()
 ```
 
 ```{r}
-event_concerned = "freeze"
-all_subjects = P.DATA$subject_names
-time_intervals <- P.DATA$time_intervals
-final_time_limit <- gsub("(.*)-","",time_intervals[length(time_intervals)]) %>% as.POSIXct(format = "%H:%M:%OS")
-default_time_seq <- seq.POSIXt(from = as.POSIXct("00:00:00",format = "%H:%M:%OS"), to = final_time_limit, by=0.001) # in miliseconds
-total_time <- sapply(default_time_seq, function(x){accumulate_time(x, considerata)})
-
-CONSIDERATA_SUBT <- lapply(all_subjects, function(x){get_relevant_profile(event.prof, x, "shelter")})
-CUMU_FREEZE_TIME_SUBT <- lapply(CONSIDERATA_SUBT, function(x){sapply(default_time_seq, function(y){accumulate_time(y, x)})})
-cumu_freeze_time_subt <- do.call(cbind, CUMU_FREEZE_TIME_SUBT) %>% as.data.frame()
-colnames(cumu_freeze_time_subt) <- all_subjects
-cumu_freeze_time_subt$time <- default_time_seq
-cumu_freeze_time_subt_to_plot <- gather(cumu_freeze_time_subt, key = "subjects", value = "cumulative time (in s)", 1:12)
-freeze_cumu_time <- ggplot(cumu_freeze_time_subt_to_plot, aes(x=time, y=cumu_freeze_time_subt_to_plot$`cumulative time (in s)`/150,color = subjects)) + geom_line() + theme_classic()
+cumulative_prof <- generate_cumulative_profiles(P.DATA, event.prof)
 ```
 
 ```{r}
-get_relevant_profile <- function(event.prof, subject_concerned, event_concerned){
-  considerata <- filter(event.prof, subject == subject_concerned) %>% filter(event == event_concerned)
-  return(considerata)
-}
+freezing_cumu <- generate_cumutime_per_event(cumulative_prof[[2]], "freeze", P.DATA, cumulative_prof[[1]]) # change the event being considered to one of "freeze", "flight", "shelter", "eventless"
 ```
-
 
 ```{r}
-accumulate_time <- function(time_considered, considerata){
-  accumu_time <- time_considered - considerata$start
-  accumu_time <- accumu_time[accumu_time >= 0]
-  return(sum(accumu_time))
-}
+subjects_considered <- c("subject1","subject2","subject3") # add the names of the subjects for which the plot is intended; if all subjects are being considered, pass in P.DATA$subject_names
+freezing_plot <- accumulated_time_plot(freezing_cumu, subject_vec = subjects_considered)
 ```
+

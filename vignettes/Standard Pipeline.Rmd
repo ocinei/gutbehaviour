@@ -17,7 +17,7 @@ devtools::install_github("ocinei/gutbehaviour")
 
 # Data imports and preprocessing 
 ```{r}
-library(devtools)
+library(gutbehaviour)
 library(tidyverse)
 data <- all_mice # data matrix here
 colnames(data) <- c("time",seq_len(121))
@@ -44,7 +44,7 @@ cumuprob_plot_new <- gutbehaviour::cumuprob_plot(event_profiles[[1]], P.DATA$tim
 ```
 
 ```{r}
-raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals, size_parameter = 1.5)
+raster <- gutbehaviour::various_lm_plots(processed_event_prof,time_intervals = P.DATA$time_intervals, size_parameter = 2)
 ```
 
 ```{r}
@@ -66,13 +66,4 @@ raster_rearranged <- raster_rearranged + theme(
   panel.border = element_blank(),
   axis.title.y.left = element_blank())
 ```
-
-```{r}
-png(file="new_raster.png",
-width=1000, height=1000)
-raster_rearranged
-dev.off()
-```
-
-
 
