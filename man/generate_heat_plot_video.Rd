@@ -7,7 +7,8 @@
 generate_heat_plot_video(
   cumu_prof,
   ordering,
-  video_name = "heat_plot_video.gif"
+  video_name = "heat_plot_video.gif",
+  experiment_time_in_sec = 15
 )
 }
 \description{

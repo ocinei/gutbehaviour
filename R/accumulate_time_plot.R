@@ -40,8 +40,8 @@ generate_caption <- function(t){
 }
 #' Function for generating heat plot video gif
 #' @export
-generate_heat_plot_video <- function(cumu_prof, ordering, video_name = "heat_plot_video.gif"){
-  heat_plot_video <- ggplot(cumu_prof, aes(x=event_considered, y=subjects, fill=cumu_time/15)) + geom_tile() + scale_fill_gradient(low="white", high="blue") + theme_classic() + scale_y_discrete(limits = ordering) + theme(axis.text.y = element_blank(), axis.ticks = element_blank(),  axis.title.y.left = element_blank()) + labs(caption = "Time = {generate_caption(frame_time)} s") +
+generate_heat_plot_video <- function(cumu_prof, ordering, video_name = "heat_plot_video.gif", experiment_time_in_sec = 15){
+  heat_plot_video <- ggplot(cumu_prof, aes(x=event_considered, y=subjects, fill=cumu_time/experiment_time_in_sec)) + geom_tile() + scale_fill_gradient(low="white", high="blue") + theme_classic() + scale_y_discrete(limits = ordering) + theme(axis.text.y = element_blank(), axis.ticks = element_blank(),  axis.title.y.left = element_blank()) + labs(caption = "Time = {generate_caption(frame_time)} s") +
     transition_time(time) +
     enter_fade() +
     exit_shrink() +
@@ -49,4 +49,21 @@ generate_heat_plot_video <- function(cumu_prof, ordering, video_name = "heat_plo
   print(heat_plot_video)
   anim_save(video_name)
   print("The heat plot video is produced and saved.")
+}
+#' Function for generating trajectory plot video gif
+#' @export
+plot_subjects_trajectory <- function(cumu_prof, subject_vec = NULL, video_name = "freeze_flight_trajectory.gif", experiment_time_in_sec = 15){
+  if (length(subject_vec) == 0){
+    subject_vec <- cumu_prof$subjects
+  }
+  cumu_prof_spread <- spread(cumu_prof, event_considered, cumu_time)
+  trajectory_plot_video <- ggplot(cumu_prof_spread %>% filter(subjects %in% subject_vec), aes(x=freeze/experiment_time_in_sec, y=flight/experiment_time_in_sec, color=subjects)) + geom_point() + theme_classic() + theme(legend.position = "none") +
+    labs(caption = "Time = {generate_caption(frame_time)} s") +
+    transition_time(time) +
+    enter_fade() +
+    exit_shrink() +
+    ease_aes('linear')
+  print(trajectory_plot_video)
+  anim_save(video_name)
+  print("The trajectory plot video is produced and saved.")
 }
