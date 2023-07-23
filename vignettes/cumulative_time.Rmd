@@ -94,13 +94,25 @@ Specify the time point to consider in `time_to_consider` parameter in the functi
 Note that the parameter subject_vec requires us to specify the subjects for which the plot is intended. If this parameter is not specified, all subjects are shown. Set show_values to FALSE if one does not need to know the exact proportion of time spent.
 
 ```{r}
-heat_map <- accumulated_time_heat_plot(cumu_prof, master_cumulative_prof = master_cumulative_prof, time_to_consider = 15, experiment_time_in_sec = 15, subject_vec = subjects_considered, show_values = TRUE)
+heat_map <- accumulated_time_heat_plot(cumu_prof, master_cumulative_prof = master_cumulative_prof, time_to_consider = 15, experiment_time_in_sec = 15, subject_vec = NULL, show_values = FALSE)
 ```
 
 ```{r, fig.width=7, fig.height=7, out.width="700px", out.height="700px"}
-heat_map
+heat_map <- heat_map + scale_y_discrete(limits = paste("subject",1:121,sep="")) + theme(axis.text.y = element_blank(), axis.ticks = element_blank(),  axis.title.y.left = element_blank())
 ```
 
+```{r}
+generate_caption <- function(t){
+  text = strftime(t,format = "%H:%M:%S")
+  return(text)
+}
+```
+
+
+```{r}
+generate_heat_plot_video(cumu_prof)
+anim_save("heat_plot_video3.gif")
+```
 
 
 

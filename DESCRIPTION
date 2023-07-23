@@ -14,7 +14,9 @@ Depends:
     tidyverse
 LazyData: true
 Imports: 
+    gganimate,
     ggplot2,
+    gifski,
     iterators
 Suggests: 
     knitr,

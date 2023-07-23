@@ -33,3 +33,20 @@ accumulated_time_heat_plot <- function(cumu, master_cumulative_prof, time_to_con
     return(heat_map)
   }
 }
+#' Helper function for generating caption in heat plot video
+generate_caption <- function(t){
+  text = strftime(t,format = "%H:%M:%S")
+  return(text)
+}
+#' Function for generating heat plot video gif
+#' @export
+generate_heat_plot_video <- function(cumu_prof, video_name = "heat_plot_video.gif"){
+  heat_plot_video <- ggplot(cumu_prof, aes(x=event_considered, y=subjects, fill=cumu_time/15)) + geom_tile() + scale_fill_gradient(low="white", high="blue") + theme_classic() + scale_y_discrete(limits = paste("subject",1:121,sep="")) + theme(axis.text.y = element_blank(), axis.ticks = element_blank(),  axis.title.y.left = element_blank()) + labs(caption = "Time = {generate_caption(frame_time)} s") +
+    transition_time(time) +
+    enter_fade() +
+    exit_shrink() +
+    ease_aes('linear')
+  print(heat_plot_video)
+  anim_save(video_name)
+  print("The heat plot video is produced and saved.")
+}
