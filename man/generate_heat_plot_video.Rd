@@ -4,7 +4,11 @@
 \alias{generate_heat_plot_video}
 \title{Function for generating heat plot video gif}
 \usage{
-generate_heat_plot_video(cumu_prof, video_name = "heat_plot_video.gif")
+generate_heat_plot_video(
+  cumu_prof,
+  ordering,
+  video_name = "heat_plot_video.gif"
+)
 }
 \description{
 Function for generating heat plot video gif

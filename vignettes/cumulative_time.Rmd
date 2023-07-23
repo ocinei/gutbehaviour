@@ -101,19 +101,6 @@ heat_map <- accumulated_time_heat_plot(cumu_prof, master_cumulative_prof = maste
 heat_map <- heat_map + scale_y_discrete(limits = paste("subject",1:121,sep="")) + theme(axis.text.y = element_blank(), axis.ticks = element_blank(),  axis.title.y.left = element_blank())
 ```
 
-```{r}
-generate_caption <- function(t){
-  text = strftime(t,format = "%H:%M:%S")
-  return(text)
-}
-```
-
-
-```{r}
-generate_heat_plot_video(cumu_prof)
-anim_save("heat_plot_video3.gif")
-```
-
-
+paste("subject",1:121,sep="")
 
 

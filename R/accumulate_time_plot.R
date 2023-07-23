@@ -40,8 +40,8 @@ generate_caption <- function(t){
 }
 #' Function for generating heat plot video gif
 #' @export
-generate_heat_plot_video <- function(cumu_prof, video_name = "heat_plot_video.gif"){
-  heat_plot_video <- ggplot(cumu_prof, aes(x=event_considered, y=subjects, fill=cumu_time/15)) + geom_tile() + scale_fill_gradient(low="white", high="blue") + theme_classic() + scale_y_discrete(limits = paste("subject",1:121,sep="")) + theme(axis.text.y = element_blank(), axis.ticks = element_blank(),  axis.title.y.left = element_blank()) + labs(caption = "Time = {generate_caption(frame_time)} s") +
+generate_heat_plot_video <- function(cumu_prof, ordering, video_name = "heat_plot_video.gif"){
+  heat_plot_video <- ggplot(cumu_prof, aes(x=event_considered, y=subjects, fill=cumu_time/15)) + geom_tile() + scale_fill_gradient(low="white", high="blue") + theme_classic() + scale_y_discrete(limits = ordering) + theme(axis.text.y = element_blank(), axis.ticks = element_blank(),  axis.title.y.left = element_blank()) + labs(caption = "Time = {generate_caption(frame_time)} s") +
     transition_time(time) +
     enter_fade() +
     exit_shrink() +
