@@ -7,7 +7,7 @@
 #'
 #' @return a list of relevant plots, currenlt showing the raster plot first
 #' @export
-various_lm_plots <- function(event_profiles, time = 0, size_parameter = 10, time_intervals) {
+various_lm_plots <- function(event_profiles, time = 0, size_parameter = 10, time_intervals, time_axis_reverse = FALSE) {
 
   # getting the limits of time_intervals
   initial_time_limit = gsub("-(.*)","",time_intervals[1])
@@ -23,6 +23,9 @@ various_lm_plots <- function(event_profiles, time = 0, size_parameter = 10, time
     gp <- ggplot(event_profiles, aes(color = event)) +
       geom_segment(aes(x = start, xend = end , y = subject, yend = subject), size = size_parameter) +
       scale_x_datetime(breaks = ("1 sec"), labels = scales::date_format("%S"), limits = as.POSIXct(c(initial_time_limit,final_time_limit), format = "%H:%M:%OS")) + xlab("time (in seconds)") + theme_light() + scale_colour_manual(values = c("#A9A9A9","#E26860","#53B0B5","#F5D584"))
+  }
+  if (time_axis_reverse == TRUE) {
+    gp <- gp + coord_x_datetime(xlim = as.POSIXct(c(final_time_limit, initial_time_limit), format = "%H:%M:%OS"))
   }
   return(gp)
 }
