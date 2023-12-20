@@ -9,7 +9,8 @@ various_lm_plots(
   time = 0,
   size_parameter = 10,
   time_intervals,
-  time_axis_reverse = FALSE
+  time_axis_reverse = FALSE,
+  flip = FALSE
 )
 }
 \arguments{
