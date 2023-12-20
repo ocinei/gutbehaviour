@@ -101,12 +101,5 @@ heat_map <- accumulated_time_heat_plot(cumu_prof, master_cumulative_prof = maste
 heat_map <- heat_map + scale_y_discrete(limits = paste("subject",1:121,sep="")) + theme(axis.text.y = element_blank(), axis.ticks = element_blank(),  axis.title.y.left = element_blank())
 ```
 
-```{r}
-cumu_prof_spread <- spread(cumu_prof, event_considered, cumu_time)
-```
-
-```{r}
-ggplot(cumu_prof_spread %>% filter(time == master_cumulative_prof[[2]][150]), aes(x=freeze/15, y=flight/15, color=subjects)) + geom_point() + theme_classic()
-```
 
 
